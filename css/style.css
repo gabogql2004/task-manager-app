@@ -113,6 +113,7 @@ header h1 {
 #tasks {
     list-style: none;
     padding: 0;
+    margin-top: 10px;
 }
 
 #tasks li {
@@ -195,4 +196,16 @@ body.dark {
     .search-filter input, .search-filter select {
         width: 100%;
     }
+}
+
+.sort-tasks {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    margin-top: 50px;
+    color: #777;
+    font-size: 0.9rem;
 }
