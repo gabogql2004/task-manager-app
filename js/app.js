@@ -6,6 +6,9 @@ const tasksList = document.getElementById('tasks');
 const clearTasksBtn = document.getElementById('clearTasksBtn');
 const taskCounter = document.getElementById('taskCounter');
 const sortSelect = document.getElementById('sortTasks');
+const searchInput = document.getElementById('searchInput');
+const filterSelect = document.getElementById('filterTasks');
+const themeToggle = document.getElementById('themeToggle');
 
 // Add a new task
 function addTask() {
@@ -33,9 +36,10 @@ function addTask() {
     updateTaskCounter();
 }
 
-// Create task element with buttons
+// Create task element
 function createTaskElement(task) {
     const li = document.createElement('li');
+    li.setAttribute('draggable', true);
     li.innerHTML = `
         <span class="task-text">${task.text}</span>
         <span class="due-date">${task.dueDate}</span>
@@ -52,7 +56,7 @@ function createTaskElement(task) {
     return li;
 }
 
-// Save tasks to localStorage
+// Save task to localStorage
 function saveTask(task) {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     tasks.push(task);
@@ -100,6 +104,16 @@ function attachTaskEvents(li) {
                 updateTaskCounter();
             }, 300);
         }
+    });
+
+    // Drag and Drop Events
+    li.addEventListener('dragstart', () => {
+        li.classList.add('dragging');
+    });
+
+    li.addEventListener('dragend', () => {
+        li.classList.remove('dragging');
+        saveCurrentOrder();
     });
 }
 
@@ -156,14 +170,92 @@ function sortTasks(tasks) {
     }
 }
 
+// Filter tasks
+function filterTasks() {
+    const filter = filterSelect.value;
+    const items = tasksList.querySelectorAll('li');
+    items.forEach(li => {
+        const priority = li.querySelector('.priority').textContent;
+        const completed = li.classList.contains('completed');
+        if (
+            filter === 'all' ||
+            (filter === 'completed' && completed) ||
+            (filter === 'active' && !completed) ||
+            priority === filter
+        ) {
+            li.style.display = '';
+        } else {
+            li.style.display = 'none';
+        }
+    });
+}
+
+// Search tasks
+function searchTasks() {
+    const query = searchInput.value.toLowerCase();
+    const items = tasksList.querySelectorAll('li');
+    items.forEach(li => {
+        const text = li.querySelector('.task-text').textContent.toLowerCase();
+        li.style.display = text.includes(query) ? '' : 'none';
+    });
+}
+
+// Drag-and-drop reordering
+tasksList.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(e.clientY);
+    const dragging = document.querySelector('.dragging');
+    if (afterElement == null) {
+        tasksList.appendChild(dragging);
+    } else {
+        tasksList.insertBefore(dragging, afterElement);
+    }
+});
+
+function getDragAfterElement(y) {
+    const draggableElements = [...tasksList.querySelectorAll('li:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        return offset < 0 && offset > closest.offset ? { offset: offset, element: child } : closest;
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function saveCurrentOrder() {
+    const tasks = [];
+    tasksList.querySelectorAll('li').forEach(li => {
+        tasks.push({
+            text: li.querySelector('.task-text').textContent,
+            dueDate: li.querySelector('.due-date').textContent,
+            priority: li.querySelector('.priority').textContent,
+            completed: li.classList.contains('completed')
+        });
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Theme toggle
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+
+// Restore theme preference
+function restoreTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+    }
+}
+
 // Event listeners
 addTaskBtn.addEventListener('click', addTask);
 clearTasksBtn.addEventListener('click', clearTasks);
-sortSelect.addEventListener('change', () => {
-    tasksList.innerHTML = '';
-    loadTasks();
-});
+sortSelect.addEventListener('change', () => { tasksList.innerHTML = ''; loadTasks(); });
+filterSelect.addEventListener('change', filterTasks);
+searchInput.addEventListener('input', searchTasks);
+themeToggle.addEventListener('click', toggleTheme);
 
-// Load saved tasks
+// Initialize app
+restoreTheme();
 loadTasks();
-

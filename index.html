@@ -11,7 +11,9 @@
         <header>
             <h1>Task Manager</h1>
             <p id="taskCounter">You have 0 tasks</p>
+            <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
         </header>
+
         <main>
             <section class="add-task">
                 <input type="text" id="taskInput" placeholder="Enter a new task">
@@ -21,6 +23,18 @@
                     <option value="high">High Priority</option>
                 </select>
                 <button id="addTaskBtn">Add Task</button>
+            </section>
+
+            <section class="search-filter">
+                <input type="text" id="searchInput" placeholder="Search tasks">
+                <select id="filterTasks">
+                    <option value="all">All</option>
+                    <option value="completed">Completed</option>
+                    <option value="active">Active</option>
+                    <option value="high">High Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="low">Low Priority</option>
+                </select>
             </section>
 
             <section class="sort-tasks">
@@ -38,6 +52,7 @@
 
             <button id="clearTasksBtn" class="clear-tasks">Clear All Tasks</button>
         </main>
+
         <footer>
             <p>&copy; 2025 Nexora Technologies</p>
         </footer>
@@ -45,10 +60,3 @@
     <script src="js/app.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
