@@ -4,19 +4,28 @@ const addTaskBtn = document.getElementById('addTaskBtn');
 const tasksList = document.getElementById('tasks');
 const clearTasksBtn = document.getElementById('clearTasksBtn');
 const taskCounter = document.getElementById('taskCounter');
+const sortSelect = document.getElementById('sortTasks');
 
 // Add a new task
 function addTask() {
     const taskText = taskInput.value.trim();
+    const dueDate = new Date().toLocaleDateString();
+
     if (taskText === '') {
         alert('Please enter a task!');
         return;
     }
 
-    const li = createTaskElement({ text: taskText, completed: false });
+    const task = {
+        text: taskText,
+        dueDate: dueDate,
+        completed: false
+    };
+
+    const li = createTaskElement(task);
     tasksList.appendChild(li);
     attachTaskEvents(li);
-    saveTask(taskText);
+    saveTask(task);
     taskInput.value = '';
     updateTaskCounter();
 }
@@ -26,6 +35,7 @@ function createTaskElement(task) {
     const li = document.createElement('li');
     li.innerHTML = `
         <span>${task.text}</span>
+        <span class="due-date">${task.dueDate}</span>
         <div class="task-buttons">
             <button class="complete-btn">✓</button>
             <button class="delete-btn">✗</button>
@@ -38,15 +48,16 @@ function createTaskElement(task) {
 }
 
 // Save tasks to localStorage
-function saveTask(taskText) {
+function saveTask(task) {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    tasks.push({ text: taskText, completed: false });
+    tasks.push(task);
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 // Load tasks from localStorage
 function loadTasks() {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    sortTasks(tasks); // Sort when loading
     tasks.forEach(task => {
         const li = createTaskElement(task);
         tasksList.appendChild(li);
@@ -67,9 +78,12 @@ function attachTaskEvents(li) {
 
     deleteBtn.addEventListener('click', () => {
         if (confirm('Delete this task?')) {
-            removeTask(li.querySelector('span').textContent);
-            li.remove();
-            updateTaskCounter();
+            li.classList.add('deleting');
+            setTimeout(() => {
+                li.remove();
+                removeTask(li.querySelector('span').textContent);
+                updateTaskCounter();
+            }, 300);
         }
     });
 }
@@ -107,9 +121,22 @@ function updateTaskCounter() {
     taskCounter.textContent = `You have ${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
 }
 
+// Sort tasks
+function sortTasks(tasks) {
+    if (sortSelect.value === 'newest') {
+        tasks.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
+    } else {
+        tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+    }
+}
+
 // Event listeners
 addTaskBtn.addEventListener('click', addTask);
 clearTasksBtn.addEventListener('click', clearTasks);
+sortSelect.addEventListener('change', () => {
+    tasksList.innerHTML = '';
+    loadTasks();
+});
 
 // Load saved tasks on page load
 loadTasks();

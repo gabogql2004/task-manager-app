@@ -67,13 +67,31 @@ header h1 {
     background: #0096c7;
 }
 
+/* Sort Tasks Section */
+.sort-tasks {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.sort-tasks label {
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.sort-tasks select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
 /* Clear Tasks Button */
 .clear-tasks {
     display: block;
     width: 100%;
     margin-top: 10px;
     padding: 10px;
-    background: #dc3545; /* Red button for "danger" action */
+    background: #dc3545;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -106,8 +124,8 @@ header h1 {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    opacity: 0; /* Start hidden for animation */
-    transform: translateY(10px); /* Start slightly lower */
+    opacity: 0;
+    transform: translateY(10px);
     animation: fadeInUp 0.4s forwards;
 }
 
@@ -121,12 +139,41 @@ header h1 {
     color: #888;
 }
 
+/* Due Date Styling */
+#tasks li .due-date {
+    font-size: 0.8rem;
+    color: #777;
+    margin-left: 10px;
+}
+
 /* Animation Keyframes */
 @keyframes fadeInUp {
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+#tasks li.deleting {
+    animation: fadeOut 0.3s forwards;
+}
+
+@keyframes slideOut {
+    to {
+        transform: translateX(30px);
+        opacity: 0.5;
+    }
+}
+
+#tasks li.completed {
+    animation: slideOut 0.4s forwards;
 }
 
 /* Task Buttons */

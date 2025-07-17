@@ -17,10 +17,20 @@
                 <input type="text" id="taskInput" placeholder="Enter a new task">
                 <button id="addTaskBtn">Add Task</button>
             </section>
+
+            <section class="sort-tasks">
+                <label for="sortTasks">Sort tasks by: </label>
+                <select id="sortTasks">
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                </select>
+            </section>
+
             <section class="task-list">
                 <h2>Your Tasks</h2>
                 <ul id="tasks"></ul>
             </section>
+
             <button id="clearTasksBtn" class="clear-tasks">Clear All Tasks</button>
         </main>
         <footer>
@@ -30,4 +40,7 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+
+
+
 
