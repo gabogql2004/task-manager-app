@@ -30,6 +30,12 @@ header h1 {
     color: #0a192f;
 }
 
+#taskCounter {
+    margin-top: 8px;
+    color: #555;
+    font-size: 1rem;
+}
+
 /* Add Task Section */
 .add-task {
     display: flex;
@@ -110,6 +116,11 @@ header h1 {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+#tasks li.completed span {
+    text-decoration: line-through;
+    color: #888;
+}
+
 /* Animation Keyframes */
 @keyframes fadeInUp {
     to {
@@ -118,7 +129,7 @@ header h1 {
     }
 }
 
-/* Future Task Buttons (Delete, Complete) */
+/* Task Buttons */
 .task-buttons {
     display: flex;
     gap: 8px;
@@ -146,4 +157,3 @@ footer {
     color: #777;
     font-size: 0.9rem;
 }
-
