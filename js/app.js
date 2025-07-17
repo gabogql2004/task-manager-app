@@ -1,5 +1,6 @@
 // Select DOM elements
 const taskInput = document.getElementById('taskInput');
+const priorityInput = document.getElementById('priorityInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const tasksList = document.getElementById('tasks');
 const clearTasksBtn = document.getElementById('clearTasksBtn');
@@ -9,6 +10,7 @@ const sortSelect = document.getElementById('sortTasks');
 // Add a new task
 function addTask() {
     const taskText = taskInput.value.trim();
+    const priority = priorityInput.value;
     const dueDate = new Date().toLocaleDateString();
 
     if (taskText === '') {
@@ -19,6 +21,7 @@ function addTask() {
     const task = {
         text: taskText,
         dueDate: dueDate,
+        priority: priority,
         completed: false
     };
 
@@ -34,9 +37,11 @@ function addTask() {
 function createTaskElement(task) {
     const li = document.createElement('li');
     li.innerHTML = `
-        <span>${task.text}</span>
+        <span class="task-text">${task.text}</span>
         <span class="due-date">${task.dueDate}</span>
+        <span class="priority ${task.priority}">${task.priority}</span>
         <div class="task-buttons">
+            <button class="edit-btn">✎</button>
             <button class="complete-btn">✓</button>
             <button class="delete-btn">✗</button>
         </div>
@@ -57,7 +62,7 @@ function saveTask(task) {
 // Load tasks from localStorage
 function loadTasks() {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    sortTasks(tasks); // Sort when loading
+    sortTasks(tasks);
     tasks.forEach(task => {
         const li = createTaskElement(task);
         tasksList.appendChild(li);
@@ -66,10 +71,20 @@ function loadTasks() {
     updateTaskCounter();
 }
 
-// Attach event listeners to task buttons
+// Attach event listeners
 function attachTaskEvents(li) {
+    const editBtn = li.querySelector('.edit-btn');
     const completeBtn = li.querySelector('.complete-btn');
     const deleteBtn = li.querySelector('.delete-btn');
+
+    editBtn.addEventListener('click', () => {
+        const taskTextEl = li.querySelector('.task-text');
+        const newText = prompt('Edit your task:', taskTextEl.textContent);
+        if (newText !== null && newText.trim() !== '') {
+            taskTextEl.textContent = newText.trim();
+            updateTaskText(li, newText.trim());
+        }
+    });
 
     completeBtn.addEventListener('click', () => {
         li.classList.toggle('completed');
@@ -81,17 +96,28 @@ function attachTaskEvents(li) {
             li.classList.add('deleting');
             setTimeout(() => {
                 li.remove();
-                removeTask(li.querySelector('span').textContent);
+                removeTask(li.querySelector('.task-text').textContent);
                 updateTaskCounter();
             }, 300);
         }
     });
 }
 
-// Update task status in localStorage
+// Update task text
+function updateTaskText(li, newText) {
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const oldText = li.querySelector('.task-text').dataset.originalText || li.querySelector('.task-text').textContent;
+    const index = tasks.findIndex(task => task.text === oldText);
+    if (index > -1) {
+        tasks[index].text = newText;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+}
+
+// Update task status
 function updateTaskStatus(li) {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    const taskText = li.querySelector('span').textContent;
+    const taskText = li.querySelector('.task-text').textContent;
     const index = tasks.findIndex(task => task.text === taskText);
     if (index > -1) {
         tasks[index].completed = li.classList.contains('completed');
@@ -99,7 +125,7 @@ function updateTaskStatus(li) {
     }
 }
 
-// Remove task from localStorage
+// Remove task
 function removeTask(taskText) {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     tasks = tasks.filter(task => task.text !== taskText);
@@ -138,5 +164,6 @@ sortSelect.addEventListener('change', () => {
     loadTasks();
 });
 
-// Load saved tasks on page load
+// Load saved tasks
 loadTasks();
+

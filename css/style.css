@@ -39,12 +39,21 @@ header h1 {
 /* Add Task Section */
 .add-task {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 20px;
 }
 
 .add-task input {
+    flex: 2;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.add-task select {
     flex: 1;
     padding: 12px;
     border: 1px solid #ccc;
@@ -127,6 +136,7 @@ header h1 {
     opacity: 0;
     transform: translateY(10px);
     animation: fadeInUp 0.4s forwards;
+    flex-wrap: wrap;
 }
 
 #tasks li:hover {
@@ -134,16 +144,37 @@ header h1 {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-#tasks li.completed span {
+#tasks li.completed span.task-text {
     text-decoration: line-through;
     color: #888;
 }
 
-/* Due Date Styling */
 #tasks li .due-date {
     font-size: 0.8rem;
     color: #777;
     margin-left: 10px;
+}
+
+/* Priority Badges */
+.priority {
+    padding: 4px 8px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+
+.priority.low {
+    background: #28a745; /* Green */
+}
+
+.priority.medium {
+    background: #ffc107; /* Yellow */
+    color: #333;
+}
+
+.priority.high {
+    background: #dc3545; /* Red */
 }
 
 /* Animation Keyframes */
@@ -204,3 +235,16 @@ footer {
     color: #777;
     font-size: 0.9rem;
 }
+
+/* Mobile Responsive */
+@media (max-width: 500px) {
+    .add-task {
+        flex-direction: column;
+    }
+    .add-task input, .add-task select, .add-task button {
+        width: 100%;
+    }
+}
+
+
+
