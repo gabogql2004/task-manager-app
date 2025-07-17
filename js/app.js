@@ -19,8 +19,6 @@ function addTask() {
     taskInput.value = ''; // Clear input field
 }
 
-addTaskBtn.addEventListener('click', addTask);
-
 function saveTask(task) {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     tasks.push(task);
@@ -36,4 +34,17 @@ function loadTasks() {
     });
 }
 
+addTaskBtn.addEventListener('click', addTask);
+
 loadTasks();
+
+// Clear all tasks
+function clearTasks() {
+    if (confirm('Are you sure you want to delete all tasks?')) {
+        localStorage.removeItem('tasks'); // Clear from localStorage
+        tasksList.innerHTML = '';         // Clear from UI
+    }
+}
+
+const clearTasksBtn = document.getElementById('clearTasksBtn');
+clearTasksBtn.addEventListener('click', clearTasks);

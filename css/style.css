@@ -30,6 +30,7 @@ header h1 {
     color: #0a192f;
 }
 
+/* Add Task Section */
 .add-task {
     display: flex;
     justify-content: space-between;
@@ -39,24 +40,47 @@ header h1 {
 
 .add-task input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 1rem;
 }
 
 .add-task button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     background: #00b4d8;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 1rem;
 }
 
 .add-task button:hover {
     background: #0096c7;
 }
 
+/* Clear Tasks Button */
+.clear-tasks {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: #dc3545; /* Red button for "danger" action */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 1rem;
+}
+
+.clear-tasks:hover {
+    background: #c82333;
+}
+
+/* Task List Section */
 .task-list h2 {
     margin-bottom: 10px;
     color: #0a192f;
@@ -64,13 +88,62 @@ header h1 {
 
 #tasks {
     list-style: none;
+    padding: 0;
 }
 
 #tasks li {
-    background: #e3f2fd;
-    margin-bottom: 8px;
-    padding: 10px;
-    border-radius: 4px;
+    background: #ffffff;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0; /* Start hidden for animation */
+    transform: translateY(10px); /* Start slightly lower */
+    animation: fadeInUp 0.4s forwards;
 }
 
+#tasks li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Future Task Buttons (Delete, Complete) */
+.task-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.task-buttons button {
+    background: #00b4d8;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.task-buttons button:hover {
+    background: #0096c7;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #777;
+    font-size: 0.9rem;
+}
 
